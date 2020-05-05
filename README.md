@@ -1,2 +1,1 @@
-# node-service-template
-A template for Node.js services
+# Bee Travels {{XXX}} Service - Node.js
