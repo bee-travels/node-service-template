@@ -1,7 +1,7 @@
 {
-  "name": "{{SERVICE_NAME}}",
+  "name": "{{.ServiceNamePill}}",
   "version": "0.0.0",
-  "description": "{{SERVICE_NAME}} service for bee-travels",
+  "description": "{{.ServiceNameLower}} service for bee-travels",
   "private": true,
   "scripts": {
     "start": "nodemon -r esm ./src/bin/www.js",

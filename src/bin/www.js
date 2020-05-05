@@ -11,7 +11,7 @@ import { createServer } from "http";
  * Get port from environment and store in Express.
  */
 
-const port = normalizePort(process.env.PORT || "{{PORT}}");
+const port = normalizePort(process.env.PORT || "{{.Port}}");
 app.set("port", port);
 
 /**

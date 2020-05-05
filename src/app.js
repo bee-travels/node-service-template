@@ -4,7 +4,7 @@ import pinoPretty from "pino-pretty";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
 
-import {{ROUTE}}Router from "./routes/{{ROUTE}}";
+import {{.Route}}Router from "./routes/{{.Route}}";
 
 const app = express();
 
@@ -26,12 +26,12 @@ app.use(express.urlencoded({ extended: false }));
 // Setup Swagger.
 // Don't use `/` for swagger, it will catch everything.
 const swaggerDocument = YAML.load("./swagger.yaml");
-swaggerDocument.host = process.env.HOST_IP || "localhost:{{PORT}}";
+swaggerDocument.host = process.env.HOST_IP || "localhost:{{.Port}}";
 swaggerDocument.schemes = [process.env.SCHEME || "http"];
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Currency api.
-app.use("/api/v1/{{ROUTE}}", {{ROUTE}}Router);
+app.use("/api/v1/{{.Route}}", {{.Route}}Router);
 
 // Catch 404s.
 app.use((_, res) => {
