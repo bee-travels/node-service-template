@@ -1,1 +1,1 @@
-# Bee Travels {{XXX}} Service - Node.js
+# Bee Travels {{SERVICE_NAME}} Service - Node.js
