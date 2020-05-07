@@ -4,6 +4,20 @@ import ExampleError from "../errors/ExampleError";
 
 const router = Router();
 
+/**
+ * @swagger
+ *
+ * /api/v1/{{.Route}}:
+ *   get:
+ *     description: Example route
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Success
+ *       400:
+ *         description: Example Error
+ */
 router.get("/", async (req, res, next) => {
   try {
     const data = await getData();
