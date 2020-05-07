@@ -28,7 +28,7 @@ app.use(express.urlencoded({ extended: false }));
 // Don't use `/` for swagger, it will catch everything.
 options.swaggerDefinition.host = process.env.HOST_IP || "localhost:{{.Port}}";
 options.swaggerDefinition.schemes = [process.env.SCHEME || "http"];
-const specs = swaggerJSDoc(swaggerConfig);
+const specs = swaggerJSDoc(options);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 // Currency api.
