@@ -1,7 +1,7 @@
 import express from "express";
 import logger from "pino-http";
 import pinoPretty from "pino-pretty";
-import swaggerJSDoc from "swagger-jsdoc";
+import parseComments from "openapi-comment-parser";
 import swaggerUi from "swagger-ui-express";
 import options from "./swaggerConfig";
 
@@ -26,9 +26,10 @@ app.use(express.urlencoded({ extended: false }));
 
 // Setup Swagger.
 // Don't use `/` for swagger, it will catch everything.
-options.swaggerDefinition.host = process.env.HOST_IP || "localhost:{{.Port}}";
-options.swaggerDefinition.schemes = [process.env.SCHEME || "http"];
-const specs = swaggerJSDoc(options);
+const spec = parseComments({
+  definition: swaggerDefinition,
+  paths: [path.join(__dirname, '**/*.?(js|yaml|yml)')],
+});
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 // {{.Route}} api.
