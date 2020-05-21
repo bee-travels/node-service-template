@@ -31,7 +31,7 @@ const spec = parseComments({
   definition: baseDefinition,
   paths: [path.join(__dirname, '**/*.?(js|yaml|yml)')],
 });
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(spec));
 
 // {{.Route}} api.
 app.use("/api/v1/{{.Route}}", {{.Route}}Router);
