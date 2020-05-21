@@ -5,7 +5,7 @@ import ExampleError from "../errors/ExampleError";
 const router = Router();
 
 /**
- * GET /api/v1/{{.Route}}:
+ * GET /api/v1/{{.Route}}
  * @description Example route
  * @response 200 - OK
  * @response 400 - Error
