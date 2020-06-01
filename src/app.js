@@ -25,7 +25,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // Setup Swagger.
 // Don't use `/` for swagger, it will catch everything.
-const specs = openapi();
+const specs = openapi({ cwd: __dirname });
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 // {{.Route}} api.
