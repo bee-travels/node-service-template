@@ -1,10 +1,8 @@
-import path from "path";
 import express from "express";
 import logger from "pino-http";
 import pinoPretty from "pino-pretty";
-import parseComments from "openapi-comment-parser";
+import openapi from "openapi-comment-parser";
 import swaggerUi from "swagger-ui-express";
-import baseDefinition from "./swaggerConfig";
 
 import {{.Route}}Router from "./routes/{{.Route}}";
 
@@ -27,11 +25,8 @@ app.use(express.urlencoded({ extended: false }));
 
 // Setup Swagger.
 // Don't use `/` for swagger, it will catch everything.
-const spec = parseComments({
-  definition: baseDefinition,
-  paths: [path.join(__dirname, '**/*.?(js|yaml|yml)')],
-});
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(spec));
+const specs = openapi();
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 // {{.Route}} api.
 app.use("/api/v1/{{.Route}}", {{.Route}}Router);
