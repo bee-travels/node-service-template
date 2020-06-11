@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getData } from "../services/dataHandler";
+import { getData, readinessCheck } from "../services/dataHandler";
 import ExampleError from "../errors/ExampleError";
 
 const router = Router();
@@ -11,14 +11,25 @@ const router = Router();
  * @response 400 - Error
  */
 router.get("/", async (req, res, next) => {
-  try {
-    const data = await getData();
-    return res.json(data);
-  } catch (e) {
-    if (e instanceof ExampleError) {
-      return res.status(400).json({ error: e.message });
-    }
-    next(e);
+  switch (req.baseUrl) {
+    case "/ready":
+      const isHealthy = await readinessCheck();
+      if (isHealthy) {
+        res.status(200).json({ status: "ok" });
+      } else {
+        res.status(503).json({ status: "Service Unavailable" });
+      }
+      break;
+    default:
+      try {
+        const data = await getData();
+        return res.json(data);
+      } catch (e) {
+        if (e instanceof ExampleError) {
+          return res.status(400).json({ error: e.message });
+        }
+        next(e);
+      }
   }
 });
 

@@ -6,6 +6,8 @@ import swaggerUi from "swagger-ui-express";
 
 import {{.Route}}Router from "./routes/{{.Route}}";
 
+import prometheus from "./routes/prometheus";
+
 const app = express();
 
 // Setup Pino.
@@ -19,6 +21,8 @@ app.use(
   })
 );
 
+app.use(prometheus);
+
 // Body parsing.
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -27,6 +31,9 @@ app.use(express.urlencoded({ extended: false }));
 // Don't use `/` for swagger, it will catch everything.
 const spec = openapi({ cwd: __dirname });
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(spec));
+
+app.use("/ready", {{.Route}}Router);
+app.use("/live", (_, res) => res.status(200).json({ status: "ok" }));
 
 // {{.Route}} api.
 app.use("/api/v1/{{.Route}}", {{.Route}}Router);
