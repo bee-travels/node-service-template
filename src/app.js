@@ -3,10 +3,11 @@ import logger from "pino-http";
 import pinoPretty from "pino-pretty";
 import openapi from "openapi-comment-parser";
 import swaggerUi from "swagger-ui-express";
+import client from "prom-client";
 
 import {{.Route}}Router from "./routes/{{.Route}}";
-
-import prometheus from "./routes/prometheus";
+import prometheus from "./prometheus";
+import health from "./health";
 
 const app = express();
 
@@ -21,7 +22,14 @@ app.use(
   })
 );
 
-app.use(prometheus);
+// Prometheus metrics collected for all service api endpoints
+app.use("/api", prometheus);
+app.get("/metrics", (_, res) => {
+  res.set("Content-Type", client.register.contentType);
+  res.end(client.register.metrics());
+});
+
+app.use(health);
 
 // Body parsing.
 app.use(express.json());
@@ -31,9 +39,6 @@ app.use(express.urlencoded({ extended: false }));
 // Don't use `/` for swagger, it will catch everything.
 const spec = openapi({ cwd: __dirname });
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(spec));
-
-app.use("/ready", {{.Route}}Router);
-app.use("/live", (_, res) => res.status(200).json({ status: "ok" }));
 
 // {{.Route}} api.
 app.use("/api/v1/{{.Route}}", {{.Route}}Router);

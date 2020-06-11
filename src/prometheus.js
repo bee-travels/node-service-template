@@ -4,8 +4,6 @@ import client, { Counter, Summary } from "prom-client";
 
 import timeResponse from "response-time";
 
-const SPECIAL_ENDPOINTS = ["/api-docs", "/metrics", "/ready", "/live"];
-
 const router = Router();
 
 client.register.clear();
@@ -28,26 +26,15 @@ const responses = new Summary({
 });
 
 router.use((req, _, next) => {
-  const currentEndpoint = "/" + req.originalUrl.split("/")[1];
-  if (!SPECIAL_ENDPOINTS.includes(currentEndpoint)) {
-    numOfRequests.inc({ method: req.method });
-    pathsTaken.inc({ path: req.path });
-  }
+  numOfRequests.inc({ method: req.method });
+  pathsTaken.inc({ path: req.path });
   next();
 });
 
 router.use(
   timeResponse((req, res, time) => {
-    const currentEndpoint = "/" + req.originalUrl.split("/")[1];
-    if (!SPECIAL_ENDPOINTS.includes(currentEndpoint)) {
-      responses.labels(req.method, req.url, res.statusCode).observe(time);
-    }
+    responses.labels(req.method, req.url, res.statusCode).observe(time);
   })
 );
-
-router.get("/metrics", (_, res) => {
-  res.set("Content-Type", client.register.contentType);
-  res.end(client.register.metrics());
-});
 
 export default router;
