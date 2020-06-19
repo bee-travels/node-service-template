@@ -16,12 +16,13 @@ router.get("/live", (_, res) => res.status(200).json({ status: "ok" }));
  * @response 200 - OK
  * @response 503 - Service Unavailable
  */
-router.get("/ready", async (req, res, next) => {
+router.get("/ready", async (_, res, next) => {
   const isHealthy = await readinessCheck();
-    if (isHealthy) {
-      res.status(200).json({ status: "ok" });
-    }
+  if (isHealthy) {
+    res.status(200).json({ status: "ok" });
+  } else {
     res.status(503).json({ status: "Service Unavailable" });
+  }
 });
 
 export default router;
