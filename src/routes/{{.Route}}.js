@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { getData } from "../services/dataHandler";
 import ExampleError from "../errors/ExampleError";
-import Jaeger from "./jaeger";
+import Jaeger from "../jaeger";
 import CircuitBreaker from "opossum";
 
 const router = Router();
@@ -19,10 +19,10 @@ const opossumOptions = {
  * @response 400 - Error
  */
 router.get("/", async (req, res, next) => {
-  const jaegerTracer = new Jaeger({{.Route}}, req, res);
+  const context = new Jaeger({{.Route}}, req, res);
   try {
     const breaker = new CircuitBreaker(getData, opossumOptions);
-    const data = await breaker.fire(jaegerTracer);
+    const data = await breaker.fire(context);
     return res.json(data);
   } catch (e) {
     if (e instanceof ExampleError) {
