@@ -19,7 +19,7 @@ const opossumOptions = {
  * @response 400 - Error
  */
 router.get("/", async (req, res, next) => {
-  const context = new Jaeger({{.Route}}, req, res);
+  const context = new Jaeger("{{.Route}}", req, res);
   try {
     const breaker = new CircuitBreaker(getData, opossumOptions);
     const data = await breaker.fire(context);
